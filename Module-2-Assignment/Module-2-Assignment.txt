@@ -33,9 +33,11 @@ Query 8:
 	(SELECT Class__c FROM Student__c WHERE FirstName__c LIKE 'S%')
 	
 Query 9: 
-	SELECT Name FROM Contact WHERE id IN (SELECT Teacher1__c from Teach__c WHERE subject__c = 'Hindi') AND id IN (SELECT Teacher1__c from Teach__c WHERE subject__c = 'English') 
+	SELECT Name FROM Contact WHERE id IN (SELECT Teacher1__c from Teach__c WHERE subject__c = 'Hindi') AND id IN (SELECT Teacher1__c 	from Teach__c WHERE subject__c = 'English') 
 	
 Query 10:
+	SELECT FirstName__c, Name FROM Student__c WHERE Class__c IN (SELECT class__c from Teach__c WHERE Subject__c='Hindi' OR 			Subject__c='English')
+
 Query 11:
 	SELECT Name, NumberOfStudents__c FROM Class__c
 	
