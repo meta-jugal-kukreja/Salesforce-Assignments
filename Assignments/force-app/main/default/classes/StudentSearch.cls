@@ -26,15 +26,16 @@ public class StudentSearch {
         return studentMap;
     }
     
-    public static Map<String, List<String>> searchStudents1()
+    public static Map<String, List<Id>> searchStudents1()
     {
-        Map<String, List<String>> studentMap = new Map<String, List<String>>();
+        Map<String, List<Id>> studentMap = new Map<String, List<Id>>();
         List<Class__c> listClass = [SELECT Name, (SELECT id FROM Students__r) FROM Class__c];
         for(Class__c cl : listClass)
         {
-            List<String> studentList = new List<String>();
-            System.debug(cl.Students__r);
-            //studentMap.put(cl.Name,studentList);
+            List<Id> studentList = new List<Id>();
+            Map<Id, Student__c> relatedStudentsMap = new Map<Id, Student__c>(cl.Students__r);
+            studentList = new List<Id>(relatedStudentsMap.keySet());
+            studentMap.put(cl.Name,studentList);
         }
         return studentMap;
     }
