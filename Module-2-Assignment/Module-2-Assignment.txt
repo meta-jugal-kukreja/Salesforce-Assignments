@@ -13,7 +13,7 @@ Query 3:
 	SELECT FirstName__c,Name, Class__r.Name FROM Student__c 
 
 Query 4:
-	SELECT Name , (SELECT FirstName__c, Name FROM Students__r) FROM 	Class__c
+	SELECT Name , (SELECT FirstName__c, Name FROM Students__r) FROM Class__c
 
 Query 5: 
 	SELECT FirstName__c, Name, Class__r.ClassTeacher__r.Name 
@@ -26,20 +26,27 @@ Query 6:
 	WHERE CALENDAR_YEAR(DOB__c) > 2000
 
 Query 7: 
-	 SELECT LastModifiedDate,Name,Status FROM Lead Where LastModifiedDate > TODAY
+	 SELECT LastModifiedDate,Name,Status FROM Lead Where LastModifiedDate = THIS_MONTH
 	 
 Query 8: 
 	SELECT id, Name, (SELECT FirstName__c FROM Students__r WHERE FirstName__c LIKE 'S%') FROM Class__c WHERE id IN 
 	(SELECT Class__c FROM Student__c WHERE FirstName__c LIKE 'S%')
 	
-Query 9: 
+Query 9:
+	(Single Picklist)
 	SELECT Name FROM Contact WHERE id IN (SELECT Teacher1__c from Teach__c WHERE subject__c = 'Hindi') AND id IN (SELECT Teacher1__c 	from Teach__c WHERE subject__c = 'English') 
+	(Multi Picklist)
+	SELECT Teacher1__r.Name FROM Teach__c WHERE Multi_Subjects__c INCLUDES ('HINDI;ENGLISH') GROUP BY Teacher1__r.Name
+	
 	
 Query 10:
+	(Single Picklist)
 	SELECT FirstName__c, Name FROM Student__c WHERE Class__c IN (SELECT class__c from Teach__c WHERE Subject__c='Hindi' OR 			Subject__c='English')
+	(Multi Picklist)
+	 SELECT Name FROM Student__c WHERE Class__c in (SELECT Class__c FROM Teach__c WHERE Multi_Subjects__c INCLUDES ('HINDI','MATHS'))
 
 Query 11:
-	SELECT Name, NumberOfStudents__c FROM Class__c
+	SELECT Class__r.Name, COUNT(Name) FROM STudent__c GROUP BY Class__r.Name
 	
 Query 12:
 	 SELECT CALENDAR_MONTH(DOB__c), COUNT(DOB__c) FROM Student__c GROUP BY CALENDAR_MONTH(DOB__c)
@@ -47,7 +54,7 @@ Query 12:
 						
 						SOSL:
 Query 1:
-	FIND {Joe} IN ALL FIELDS RETURNING Contact(Name), 	Student__c(FirstName__c)
+	FIND {Joe} IN ALL FIELDS RETURNING Contact(Name), Student__c(FirstName__c)
 
 Query 2:
-	FIND {Joe} IN ALL FIELDS RETURNING Student__c(FirstName__c WHERE 	Sex__c = 'Male')
+	FIND {Joe} IN ALL FIELDS RETURNING Student__c(FirstName__c WHERE Sex__c = 'Male')
