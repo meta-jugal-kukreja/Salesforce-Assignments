@@ -1,5 +1,5 @@
-public class ScheduleTask {   
-    public static void taskScheduler()
+public class TaskScheduler {   
+    public static void scheduleTask()
     {
         scheduledBatchable sb = new scheduledBatchable();
         String CRON = '0 0 1 * * ?';
