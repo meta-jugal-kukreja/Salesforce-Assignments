@@ -3,11 +3,11 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
-            "c/nouislider": [
-                "../staticresources/nouislider/nouislider.js"
-            ],
             "c/leaflet": [
                 "../staticresources/leaflet/leaflet.js"
+            ],
+            "c/nouislider": [
+                "../staticresources/nouislider/nouislider.js"
             ]
         }
     },

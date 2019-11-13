@@ -5,9 +5,9 @@ global class sendEmailToOpptyOwner implements Database.Batchable<sObject>{
    }
 
    global void execute(Database.BatchableContext BC, List<Opportunity > scope){
-       String[] toAddresses;
+       List<String> toAddresses = new List<String>();
      for(Opportunity s : scope){
-        toAddresses = new String[] {s.Owner.Email};
+        toAddresses.add(s.Owner.Email);
      }
        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
        mail.setToAddresses(toAddresses);
