@@ -5,20 +5,18 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
 {
     if(Trigger.isBefore)
     {
-        Integer i = 0;
         Set<ID> newIds = new Set<ID>();
         for(Student__c oneStudent : Trigger.New)
         {
             newIds.add(oneStudent.class__c);
         }
-        List<Class__C> classList = [SELECT MaxSize__c, NumberOfStudents__c from class__c WHERE Id IN: newIds];
+        List<Class__C> classList = [SELECT MaxSize__c from class__c WHERE Id IN: newIds];
         for(Class__c oneClass : classList)
         {
-            if(oneClass.MaxSize__c == oneClass.NumberOfStudents__c)
+            if(oneClass.MaxSize__c == oneClass.Students__r.size())
             {
-                Trigger.New[i].addError('Maximum Capacity of the class is reached.');
+                Trigger.newMap.get(oneClass.Id).addError('Maximum Capacity of the class is reached.');
             }
-            i++;
         }
     }
     else if(Trigger.isAfter)
@@ -44,7 +42,6 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
         }
         for(Class__c oneClass : classList)
         {
-            System.debug(oneClass.Name + ' ' + oneClass.Students__r.size());
             oneClass.MyCount__c = oneClass.Students__r.size();
         }
         update classList;
