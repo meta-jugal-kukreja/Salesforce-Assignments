@@ -24,7 +24,7 @@ public class StudentSearchTest
    @isTest
    public static void getNamesOfMultipleStudent()
    {
-       Class__c cls = new Class__c(Name='x',MaxSize__c=2);
+       Class__c cls = new Class__c(Name='x',MaxSize__c=200);
        insert cls;
        List<Student__c> studentsInClass = new List<Student__c>();
        for(Integer i = 0; i < 101; i++)
@@ -45,7 +45,7 @@ public class StudentSearchTest
        List<Student__c> listOfStudents = new List<Student__c>();
        Class__c c = new Class__c(Name='x',MaxSize__c=2);
        insert c;
-       for(Integer i=0;i<2;i++)
+       for(Integer i=0;i<101;i++)
        {
            Student__c stu = new Student__c(Name='x'+i,Class__c=c.Id,Sex__c='Female');
            listOfStudents.add(stu);
@@ -54,6 +54,6 @@ public class StudentSearchTest
        Map<String,List<Id>> result= StudentSearch.getStudentMap();
        List<Id> setOfStudents = new List<Id>();
        setOfStudents = result.get(c.Name);
-       System.assertEquals(2,setOfStudents.size(), 'All students are not there in the class');
+       System.assertEquals(101,setOfStudents.size(), 'All students are not there in the class');
    }
 }

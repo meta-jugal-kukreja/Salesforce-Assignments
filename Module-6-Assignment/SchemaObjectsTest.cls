@@ -14,6 +14,6 @@ public class SchemaObjectsTest
         List<String> listOfObject = scObject.getAllObjects();
         Set<String> result = new Set<String>();
         result.addAll(listOfObject);
-        System.assert(result.contains('Student__c'), 'Object doesn\'t exist.');  
+        System.assert(result.contains('Student__c'), 'Object doesn\t exist.');  
     }
 }
