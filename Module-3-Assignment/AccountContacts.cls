@@ -14,19 +14,12 @@ public class AccountContacts
        {
            List<Contact> contacts = [Select Id from Contact Where AccountID = :acc.Id];
            String result = '';
-           for (Integer i = 0; i < contacts.size(); i++) 
+           for (Contact oneContact : contacts) 
            {
-               Contact cont = contacts.get(i);
-               if(i == contacts.size() - 1)
-               {
-                   result = result + cont.Id;
-               }
-               else
-               {
-                   result = result + cont.Id + ',';
-               }  
+               result += oneContact.Id + ',';
            }
-           acc.ContactIDs__c = result;
+           
+           acc.ContactIDs__c = result.removeEnd(',');
        } 
        else 
        {
