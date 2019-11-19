@@ -1,7 +1,7 @@
 /**
 * Trigger to restrict deletion of class if it has more than one female students.
 */
-trigger ClassOperationsTrigger on Class__c (before delete, after update) 
+trigger ClassTrigger on Class__c (before delete, after update) 
 {
     if(Trigger.isBefore)
     {

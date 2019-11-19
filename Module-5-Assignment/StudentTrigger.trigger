@@ -1,7 +1,7 @@
 /**
 * Trigger to restrict insertion of a student into a class if that class max capacity is reached.
 */
-trigger StudentInsertionTrigger on Student__c (before insert, after insert, after update) 
+trigger StudentTrigger on Student__c (before insert, after insert, after update) 
 {
     if(Trigger.isBefore)
     {
@@ -15,7 +15,6 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
         for(Student__c student: Trigger.new)
         {
             Decimal maxSize = classes.get(student.Class__c).MaxSize__c;
-            System.debug('Max size ' + maxSize);
             if(studentsCountForClass.get(student.Class__c) == null)
             {
                 Decimal existingStudentsInClass = classes.get(student.Class__c).NumberOfStudents__c;
@@ -32,12 +31,9 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
             else
             {
                 Decimal numberOfStudents = studentsCountForClass.get(student.Class__c) + 1 ;
-                System.debug('Inserting ' + numberOfStudents + 'th student');
-             
                 if(numberOfStudents >= maxSize)
                 {
                     student.addError('Maximum class size reached');
-                    System.debug('Adding error');
                 }
                 else
                 {
@@ -61,11 +57,11 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
             {
                     oldIds.add(oneStudent.class__c);
             }
-            classList = [SELECT Name, (SELECT Name FROM Students__r) from class__c WHERE Id IN: newIds OR Id IN: oldIds];
+            classList = [SELECT Name, (SELECT Name FROM Students__r) FROM class__c WHERE Id IN: newIds OR Id IN: oldIds];
         }
         else
         {
-            classList = [SELECT Name, (SELECT Name FROM Students__r) from class__c WHERE Id IN: newIds];
+            classList = [SELECT Name, (SELECT Name FROM Students__r) FROM class__c WHERE Id IN: newIds];
         }
         for(Class__c oneClass : classList)
         {
