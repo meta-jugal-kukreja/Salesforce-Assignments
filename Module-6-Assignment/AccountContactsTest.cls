@@ -5,7 +5,7 @@
 public class AccountContactsTest 
 {
     /**
-     * Method to test the formation of ContactIds field value with one contact in the account when ContactIds field is not null.
+     * Method to test the formation of ContactIds field value with one contact in the account when ContactIds field is null.
      */
 	@isTest
     private static void testWithOneContactId()

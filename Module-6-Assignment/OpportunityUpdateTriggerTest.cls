@@ -18,7 +18,7 @@ public class OpportunityUpdateTriggerTest
         Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
         System.assert(result.isSuccess());
         System.assert(result.getErrors().size() == 0);
-        System.assertEquals(System.today(), oppy.CloseDate, 'CloseDate is not equal to today's Date');
+        System.assertEquals(System.today(), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
     }
     
     /**
@@ -28,14 +28,14 @@ public class OpportunityUpdateTriggerTest
     @isTest 
     static void testWhenStageChangesFromAnotherValueToClosedLost() 
     {
-        Opportunity opp = new Opportunity(Name = 'Opportunity 2', StageName = 'Need Analusis', closeDate = Date.newInstance(2020, 2, 5));
+        Opportunity opp = new Opportunity(Name = 'Opportunity 2', StageName = 'Need Analysis', closeDate = Date.newInstance(2020, 2, 5));
         insert opp;
         opp.StageName = 'Closed Lost';
         Database.saveResult result = Database.UPDATE(opp, false);
         Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
         System.assert(result.isSuccess());
         System.assert(result.getErrors().size() == 0);
-        System.assertEquals(System.today(), oppy.CloseDate, 'CloseDate is not equal to today's Date');
+        System.assertEquals(System.today(), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
     }
     
     /**
@@ -52,6 +52,54 @@ public class OpportunityUpdateTriggerTest
         Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
         System.assert(result.isSuccess());
         System.assert(result.getErrors().size() == 0);
-        System.assertEquals(Date.newInstance(2019, 1, 5), oppy.CloseDate, 'CloseDate is changed');
+        System.assertEquals(Date.newInstance(2019, 1, 5), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
+    }
+    
+    /**
+     * Test method to check the opportunities closed date when StageName changes from Closed Won To Closed Lost.
+     */ 
+    @isTest 
+    static void testWhenStageChangesFromClosedWonToClosedLost() 
+    {
+        Opportunity opp = new Opportunity(Name = 'Opportunity 3', StageName = 'Closed Won', closeDate = Date.newInstance(2019, 1, 5));
+        insert opp;
+        opp.StageName = 'Closed Lost';
+        Database.saveResult result = Database.UPDATE(opp, false);
+        Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
+        System.assert(result.isSuccess());
+        System.assert(result.getErrors().size() == 0);
+        System.assertEquals(System.today(), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
+    }
+    
+    /**
+     * Test method to check the opportunities closed date when StageName changes from Closed Lost To Closed Won.
+     */ 
+    @isTest 
+    static void testWhenStageChangesFromClosedLostToClosedWon() 
+    {
+        Opportunity opp = new Opportunity(Name = 'Opportunity 3', StageName = 'Closed Lost', closeDate = Date.newInstance(2019, 1, 5));
+        insert opp;
+        opp.StageName = 'Closed Won';
+        Database.saveResult result = Database.UPDATE(opp, false);
+        Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
+        System.assert(result.isSuccess());
+        System.assert(result.getErrors().size() == 0);
+        System.assertEquals(System.today(), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
+    }
+    
+    /**
+     * Test method to check the opportunities closed date when StageName is not changed.
+     */ 
+    @isTest 
+    static void testWhenStageChangeIsNotChanged() 
+    {
+        Opportunity opp = new Opportunity(Name = 'Opportunity 3', StageName = 'Closed Lost', closeDate = Date.newInstance(2019, 1, 5));
+        insert opp;
+        opp.StageName = 'Closed Lost';
+        Database.saveResult result = Database.UPDATE(opp, false);
+        Opportunity oppy = [Select closeDate from Opportunity where id = :opp.Id];
+        System.assert(result.isSuccess());
+        System.assert(result.getErrors().size() == 0);
+        System.assertEquals(Date.newInstance(2019, 1, 5), oppy.CloseDate, 'Close Date of opportunity was not as Expected');
     }
 }
