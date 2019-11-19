@@ -10,12 +10,39 @@ trigger StudentInsertionTrigger on Student__c (before insert, after insert, afte
         {
             newIds.add(oneStudent.class__c);
         }
-        List<Class__C> classList = [SELECT MaxSize__c from class__c WHERE Id IN: newIds];
-        for(Class__c oneClass : classList)
+        Map<Id, Decimal> studentsCountForClass = new Map<Id, Decimal>();
+        Map<Id, Class__c> classes = new Map<Id, Class__c>([SELECT Id, MaxSize__c, NumberOfStudents__c FROM Class__c WHERE Id in :newIds]);
+        for(Student__c student: Trigger.new)
         {
-            if(oneClass.MaxSize__c == oneClass.Students__r.size())
+            Decimal maxSize = classes.get(student.Class__c).MaxSize__c;
+            System.debug('Max size ' + maxSize);
+            if(studentsCountForClass.get(student.Class__c) == null)
             {
-                Trigger.newMap.get(oneClass.Id).addError('Maximum Capacity of the class is reached.');
+                Decimal existingStudentsInClass = classes.get(student.Class__c).NumberOfStudents__c;
+            
+                if(existingStudentsInClass >=  maxSize)
+                {
+                    student.addError('Maximum class size reached');
+                }
+                else
+                {
+                    studentsCountForClass.put(student.Class__c, existingStudentsInClass);
+                }
+            }
+            else
+            {
+                Decimal numberOfStudents = studentsCountForClass.get(student.Class__c) + 1 ;
+                System.debug('Inserting ' + numberOfStudents + 'th student');
+             
+                if(numberOfStudents >= maxSize)
+                {
+                    student.addError('Maximum class size reached');
+                    System.debug('Adding error');
+                }
+                else
+                {
+                    studentsCountForClass.put(student.Class__c, numberOfStudents);
+                }
             }
         }
     }
