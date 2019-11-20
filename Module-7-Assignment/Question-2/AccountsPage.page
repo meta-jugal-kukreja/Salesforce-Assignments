@@ -1,0 +1,32 @@
+<apex:page Controller="ControllerForAccount">
+    <apex:form >
+        <apex:pageBlock title="Accounts Search">
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!getAccounts}" value="Search"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:inputText value="{!city}" label="Billing City"/>
+                <apex:inputText value="{!state}" label="Billing State"/>
+                <apex:inputText value="{!country}" label="Billing Country"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockTable value="{!accountsList}" var="acc" id="Result">
+                <apex:column value="{!acc.Name}"/>
+                <apex:column value="{!acc.BillingCity}"/>
+                <apex:column value="{!acc.BillingState}"/>
+                <apex:column value="{!acc.BillingCountry}"/>
+            </apex:pageBlockTable>
+            Page : <apex:outputText value="{! CEILING(ResultSize / pageSize) }"></apex:outputText>
+            <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}" value="First" />
+                <apex:commandLink action="{!previous}" value="Previous" rendered="{!setCon.HasPrevious}" />
+                <apex:commandLink action="{!next}" value="Next" rendered="{!setCon.HasNext}" />
+                <apex:commandLink action="{!last}" value="Last" />
+            </apex:panelGrid>
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>
