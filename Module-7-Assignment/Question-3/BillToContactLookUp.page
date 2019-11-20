@@ -1,0 +1,15 @@
+<apex:page Controller="BillToContactLookUpController">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:selectRadio value="{! lookUpBillToContact}">
+                <apex:selectOptions value="{! contactOptions}" >
+                </apex:selectOptions>
+            </apex:selectRadio>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" reRender="testId" action="{! save}"/>
+                <apex:commandButton value="Clear" reRender="testId" action="{! clear}"/>
+                <apex:commandButton value="Cancel" reRender="testId" action="{! cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
