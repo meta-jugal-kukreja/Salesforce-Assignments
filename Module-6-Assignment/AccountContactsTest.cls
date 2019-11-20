@@ -83,7 +83,8 @@ public class AccountContactsTest
         {
             resultantString += oneContact.id + ',';
         }
-        acc.ContactIDs__c = resultantString.removeEnd(',');
+        resultantString = resultantString.removeEnd(',');
+        acc.ContactIDs__c = resultantString;
         update acc;
         Contact contact2 = new Contact(LastName = 'Test contact 2' , AccountId = acc.Id);
         insert contact2;

@@ -11,7 +11,7 @@ public class ClassOperationsTriggerTest {
     private static void testCustomStatusFieldChangedFromNewToReset()
     {
         Class__c oneClass = new Class__c(Name = 'Test Class' , Custom_Status__c = 'New');
-        oneClass.MaxSize__c = 100;
+        oneClass.MaxSize__c = 150;
         insert oneClass;
         List<Student__c> studentList = new List<Student__c>();
         for(Integer i = 0; i < 101 ; i++)
