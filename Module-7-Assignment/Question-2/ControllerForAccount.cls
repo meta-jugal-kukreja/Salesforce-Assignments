@@ -15,12 +15,14 @@ public class ControllerForAccount
     /**
      * Method to send account details to the visualforce page.
      */ 
-    public void getAccounts() {
+    public void getAccounts() 
+    {
         setCon = new ApexPages.StandardSetController(Database.getQueryLocator([SELECT Name, BillingCity, BillingState, BillingCountry FROM Account 
-                                                                               WHERE BillingCity LIKE :City + '%' AND BillingState LIKE :state + '%' 
-                                                                               AND BillingCountry LIKE :country + '%']));
+                                                                               WHERE BillingCity =: City AND BillingState =:state
+                                                                               AND BillingCountry =:country]));
         resultSize = setCon.getResultSize();
-        pageSize = 10;
+        pageSize = 1;
+        setCon.setPageSize(pageSize);
         accountsList = (List<Account>) setCon.getRecords();
         
     }
@@ -28,7 +30,8 @@ public class ControllerForAccount
     /*
 	 * Method to get custom pagination first page
 	 */
-    public void first() {
+    public void first() 
+    {
         setcon.first();
         accountsList= (List<Account>)setCon.getRecords();
     }
@@ -36,7 +39,8 @@ public class ControllerForAccount
     /*
 	 * Method to get custom pagination last page
 	 */
-    public void last() {
+    public void last() 
+    {
         setcon.last();
         accountsList= (List<Account>)setCon.getRecords();
     }
@@ -44,7 +48,8 @@ public class ControllerForAccount
     /*
 	 * Method to get custom pagination previous page
 	 */
-    public void previous() {
+    public void previous() 
+    {
         setcon.previous();
         accountsList= (List<Account>)setCon.getRecords();
     }
@@ -52,7 +57,8 @@ public class ControllerForAccount
     /*
 	 * Method to get custom pagination next page
 	 */
-    public void next() {
+    public void next() 
+    {
         setcon.next();
         accountsList= (List<Account>)setCon.getRecords();
     } 
