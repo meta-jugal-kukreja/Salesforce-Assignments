@@ -23,12 +23,12 @@ public class BillToContactLookUpControllerTest
         Test.setCurrentPage(pref);
         BillToContactLookUpController controller = new BillToContactLookUpController();
         Test.startTest();
-        controller.currentAccountId = opp.Id;
+        controller.currentOpportunityId = opp.Id;
         controller.lookUpBillToContact = con.Id;
         pref = controller.save();
-        System.assertEquals(pref.getUrl(), '/'+opp.Id, 'Page was not redirected as expected.');
-        System.assertEquals(con.Id, [SELECT BillToContact__c FROM Opportunity WHERE Id =: opp.Id].BillToContact__c, 
-                           'BillTOContact__c field was not populated as Expected.');
+        Id resultantBillToContact = [SELECT BillToContact__c FROM Opportunity WHERE Id =: opp.Id].BillToContact__c;
+        System.assertEquals(pref.getUrl(), '/' + opp.Id, 'Page was not redirected as expected.');
+        System.assertEquals(con.Id, resultantBillToContact, 'BillToContact__c field was not populated as Expected.');
         Test.stopTest();
     }
     
@@ -51,12 +51,12 @@ public class BillToContactLookUpControllerTest
         Test.setCurrentPage(pref);
         BillToContactLookUpController controller = new BillToContactLookUpController();
         Test.startTest();
-        controller.currentAccountId = opp.Id;
+        controller.currentOpportunityId = opp.Id;
         controller.lookUpBillToContact = con.Id;
         pref = controller.clear();
-        System.assertEquals(pref.getUrl(), '/'+opp.Id, 'Page was not redirected as expected.');
-        System.assertEquals(null, [SELECT BillToContact__c FROM Opportunity WHERE Id =: opp.Id].BillToContact__c, 
-                           'BillTOContact__c field was not populated as Expected.');
+        Id resultantBillToContact = [SELECT BillToContact__c FROM Opportunity WHERE Id =: opp.Id].BillToContact__c;
+        System.assertEquals(pref.getUrl(), '/' + opp.Id, 'Page was not redirected as expected.');
+        System.assertEquals(null, resultantBillToContact, 'BillToContact__c field was not populated as Expected.');
         Test.stopTest();
     }
     
@@ -79,10 +79,11 @@ public class BillToContactLookUpControllerTest
         Test.setCurrentPage(pref);
         BillToContactLookUpController controller = new BillToContactLookUpController();
         Test.startTest();
-        controller.currentAccountId = opp.Id;
-        controller.lookUpBillToContact = con.Id;
+        controller.currentOpportunityId = opp.Id;
         pref = controller.cancel();
-        System.assertEquals(pref.getUrl(), '/'+opp.Id, 'Page was not redirected as expected.');
+        Id resultantBillToContact = [SELECT BillToContact__c FROM Opportunity WHERE Id =: opp.Id].BillToContact__c;
+        System.assertEquals(pref.getUrl(), '/' + opp.Id, 'Page was not redirected as expected.');
+        System.assertEquals(null, resultantBillToContact, 'BillToContact__c field was not populated as Expected.');
         Test.stopTest();
     }
 }

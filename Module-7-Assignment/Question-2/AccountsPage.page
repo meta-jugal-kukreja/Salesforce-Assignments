@@ -10,23 +10,31 @@
                 <apex:inputText value="{!country}" label="Billing Country"/>
             </apex:pageBlockSection>
         </apex:pageBlock>
-    </apex:form>
-    <apex:form >
-        <apex:pageBlock >
-            <apex:pageBlockTable value="{!accountsList}" var="acc" id="Result">
-                <apex:column value="{!acc.Name}"/>
-                <apex:column value="{!acc.BillingCity}"/>
-                <apex:column value="{!acc.BillingState}"/>
-                <apex:column value="{!acc.BillingCountry}"/>
-            </apex:pageBlockTable>
-            Page : <apex:outputText value="{! CEILING(ResultSize / pageSize) }"></apex:outputText>
-            <apex:panelGrid columns="4">
-                <apex:commandLink action="{!first}" value="First" />
-                <apex:commandLink action="{!previous}" value="Previous" rendered="{!setCon.HasPrevious}" />
-                <apex:commandLink action="{!next}" value="Next" rendered="{!setCon.HasNext}" />
-                <apex:commandLink action="{!last}" value="Last" />
-            </apex:panelGrid>
-        </apex:pageBlock>
-        
+        <apex:outputLabel rendered="{! NOT(showAccountsList)}">
+            <p>
+                Not accounts to Display.
+            </p>
+        </apex:outputLabel>
+        <apex:outputPanel rendered="{! showAccountsList}">
+            <apex:pageBlock title="Accounts List">
+                <apex:pageBlockTable value="{!accountsList}" var="acc" id="Result">
+                    <apex:column value="{!acc.Name}" headerValue="{! UPPER($ObjectType.Account.Fields.Name.Label)}"/>
+                    <apex:column value="{!acc.BillingCity}" headerValue="{! UPPER($ObjectType.Account.Fields.BillingCity.Label)}"/>
+                    <apex:column value="{!acc.BillingState}" headerValue="{! UPPER($ObjectType.Account.Fields.BillingState.Label)}"/>
+                    <apex:column value="{!acc.BillingCountry}" headerValue="{! UPPER($ObjectType.Account.Fields.BillingCountry.Label)}"/>
+                </apex:pageBlockTable>
+                <br />
+                Page : <apex:outputText value="{! PageNumber } Of {! CEILING(ResultSize / pageSize) }"></apex:outputText>
+                <br />
+                <apex:panelGrid columns="4">
+                    <apex:commandLink action="{!first}" value="First" />
+                    <apex:commandLink action="{!previous}" value="Previous" rendered="{!setCon.HasPrevious}" />
+                    <apex:outputText style="color: #ccc;" value="Previous" rendered="{!NOT(setCon.HasPrevious)}"/>
+                    <apex:commandLink action="{!next}" value="Next" rendered="{!setCon.HasNext}" />
+                    <apex:outputText style="color: #ccc;" value="Next" rendered="{!NOT(setCon.HasNext)}"/>
+                    <apex:commandLink action="{!last}" value="Last" />
+                </apex:panelGrid>
+            </apex:pageBlock>
+        </apex:outputPanel> 
     </apex:form>
 </apex:page>

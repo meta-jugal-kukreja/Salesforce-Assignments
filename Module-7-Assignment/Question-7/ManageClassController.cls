@@ -17,7 +17,6 @@ public class ManageClassController
     public ManageClassController()
     {
         isEdit = false;
-        classes = new List<Class__c>();
         classes = [SELECT Name FROM Class__c];
     }
     
@@ -40,7 +39,11 @@ public class ManageClassController
         currentClass.Currency__c = !String.isBlank(classFee) ? Decimal.valueOf(classFee) : 0;
         currentClass.MaxSize__c = !String.isBlank(classMaxSize) ? Decimal.valueOf(classMaxSize) : 0;
         update currentClass;
-        return (new PageReference('https://c.ap15.visual.force.com/apex/manageClass?core.apexpages.request.devconsole=1'));
+        PageReference pageRef = new PageReference('/apex/manageClass');
+        pageRef.setRedirect(false);
+        isEdit = false;
+        classes = [SELECT Name FROM Class__c];
+        return pageRef;
     }
     
     /**
@@ -50,6 +53,9 @@ public class ManageClassController
     {
         Class__c currentClass = [SELECT Id FROM Class__c WHERE Id =: classId];
         delete currentClass;
-        return (new PageReference('https://c.ap15.visual.force.com/apex/manageClass?core.apexpages.request.devconsole=1'));
+        PageReference pageRef = new PageReference('/apex/manageClass');
+        pageRef.setRedirect(false);
+        isEdit = false;
+        return pageRef;
     }
 }

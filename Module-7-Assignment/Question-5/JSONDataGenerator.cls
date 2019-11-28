@@ -1,24 +1,31 @@
 /**
- * Controller for JSONPage to generate JSON String.
+ * Controller for JSONPage to generate JSON String conatining a student's details.
  */ 
 public class JSONDataGenerator 
 {
-    public String jsonString {get;set;}
-    
+    public String jsonString {get;set;} 
+    public JSONDataGenerator()
+    {
+        
+    }
     /**
      * Constructor to initialize the jsonString with data;
      */ 
-	public JSONDataGenerator()
+	public JSONDataGenerator(ApexPages.StandardController controller)
     {
-        jsonString = prepareData();
+        controller.addFields(new List<String>{'Name', 'dob__c', 'age__c'});
+        Student__c student = (Student__c)controller.getRecord();
+        jsonString = prepareData(student);
     }
     
     /**
      * Method to prepare the JSON String.
      */ 
-    public String prepareData()
+    public String prepareData(Student__c student)
     {
-        List<Student__c> studentList = [SELECT Name, Class__r.Name, FirstName__c, DOB__c, Age__c, Email__c, Sex__c FROM Student__c];
-        return JSON.serialize(studentList);
+        String jsonString = JSON.serialize(student);
+        Map<String, Object> deserialized = (Map<String, Object>) JSON.deserializeUntyped(jsonString);
+        deserialized.remove('attributes');
+        return JSON.serialize(deserialized);
     }
 }

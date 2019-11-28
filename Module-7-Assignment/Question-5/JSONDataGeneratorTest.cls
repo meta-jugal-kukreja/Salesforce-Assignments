@@ -10,15 +10,15 @@ public class JSONDataGeneratorTest
 	@isTest
     private static void testJsonString()
     {
-        List<Student__c> studentList = new List<Student__c>();
+        Student__c student = new Student__c();
         Class__c oneClass = new Class__c(Name = 'Test Class', MaxSize__c = 500);
         insert oneClass;
-        for(Integer i = 0; i < 2; i++)
-        {
-            studentList.add(new Student__c(Name = 'Test ' + i, Class__c = oneClass.Id));
-        }
-        insert studentList;
+        student = new Student__c(Name = 'Test Student', Class__c = oneClass.Id);
+        insert student;
         JSONDataGenerator generator = new JSONDataGenerator();
-        System.assert(generator.jsonString != null, 'JSON String was not generated');
+        String JsonString = generator.prepareData(student);
+        Map<String, Object> deserializedString = (Map<String, Object>) JSON.deserializeUntyped(JsonString);
+        System.assertEquals('Test Student', deserializedString.get('Name'), 'JSON String was not formed as expected.');
+        System.assertEquals(oneClass.Id, deserializedString.get('Class__c'), 'JSON String was not formed as expected.');
     }
 }
