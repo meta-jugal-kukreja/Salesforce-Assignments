@@ -5,54 +5,47 @@
 public class ManageClassControllerTest 
 {
     /**
-     * Test Method to test the updation of class details.
+     * Setup method to setup data for tests.
      */ 
-	@isTest
-    private static void testSaveDetails()
+    @testSetup
+    static void setUpTestdata() 
     {
-        Contact con = new Contact(LastName = 'Test Contact');
-        insert con;
-        Class__c newClass = new Class__c(Name = 'Test Class', ClassTeacher__c = con.Id);
-        insert newClass;
-        PageReference pref = Page.manageClass;
-        pref.getParameters().put('id', newClass.Id);
-        Test.setCurrentPage(pref);
-        ManageClassController controller = new ManageClassController();
-        Test.startTest();
-        controller.classId = newClass.Id;
-        controller.className = 'New Class Name';
-        controller.classDescription = 'New Class description';
-        controller.classFee = '12345';
-        controller.classMaxSize = '12';
-        pref = controller.SaveDetails();
-        System.assertEquals(pref.getUrl(), 'https://c.ap15.visual.force.com/apex/manageClass?core.apexpages.request.devconsole=1', 
-                            'Page was not redirected as expected.');
-        System.assertEquals('New Class Name', [SELECT Name FROM Class__c WHERE Id =: newClass.Id].Name, 
-                            'Class was not succesfully updated');
-        Test.stopTest();
+    	Class__c testClass = new Class__c(Name = 'testClass');
+        insert testClass;
     }
     
     /**
-     * Test Method to test the deletion of class.
+     * Test method to test the updation of class details.
      */ 
     @isTest
-    private static void testclassDeletion()
+    static void testUpdateClass() 
     {
-        Contact con = new Contact(LastName = 'Test Contact');
-        insert con;
-        Class__c newClass = new Class__c(Name = 'Test Class', ClassTeacher__c = con.Id);
-        insert newClass;
-        PageReference pref = Page.manageClass;
-        pref.getParameters().put('id', newClass.Id);
-        Test.setCurrentPage(pref);
         ManageClassController controller = new ManageClassController();
-        Test.startTest();
-        controller.classId = newClass.Id;
-        pref = controller.deleteClass();
-        System.assertEquals(pref.getUrl(), 'https://c.ap15.visual.force.com/apex/manageClass?core.apexpages.request.devconsole=1', 
-                            'Page was not redirected as expected.');
-        System.assertEquals(0, [SELECT Name FROM Class__c WHERE Id =: newClass.Id].Size(), 
-                            'Class was not succesfully deleted');
-        Test.stopTest();
+        // call getClass method
+        list<Class__c> allClasses = controller.getClasses();
+        controller.ClassId = allClasses[0].Id;
+        //call editClass method
+        controller.editClass();
+        controller.SelectedClass.Name = 'test1';
+        controller.SelectedClass.Currency__c = 10000;
+        controller.SelectedClass.MaxSize__c = 40;
+        //call updateClassMethod
+        controller.updateClass();
+        allClasses = controller.getClasses();
+        System.assertEquals(10000, allClasses[0].Currency__c,'Class not updated');
+    }
+    
+    /**
+     * Test method to test the deletion of class details.
+     */
+    @isTest
+    static void testDeleteClass() 
+    {
+        ManageClassController controller = new ManageClassController();
+        list<Class__c> allClasses = controller.getClasses();
+        controller.ClassId = allClasses[0].Id;
+        controller.deleteClass();
+        allClasses = controller.getClasses();
+        System.assertEquals(0, allClasses.size(),'Class not deleted');
     }
 }

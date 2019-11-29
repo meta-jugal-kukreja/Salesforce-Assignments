@@ -1,61 +1,54 @@
 /**
- * Controller for page ManageClass.
- */ 
+* Controller for page ManageClass.
+*/ 
 public class ManageClassController 
 {
-    public List<Class__c> classes {get;set;}
-    public Id classId {get;set;}
-    public String className {get;set;}
-    public String classDescription{get;set;}
-    public String classFee{get;set;}
-    public String classMaxSize{get;set;}
-    public boolean isEdit{get;set;}
+    public Id ClassId{get;set;}
+    public boolean Render{get;set;}
+    public Class__c SelectedClass{get;set;}
     
     /**
-     * Constructor to initialize the isEdit variable to false and get all the classes.
+     * Constructor to initialize the data memebers of the class.
      */ 
-    public ManageClassController()
+    public ManageClassController() 
     {
-        isEdit = false;
-        classes = [SELECT Name FROM Class__c];
+        Render = false;
     }
     
     /**
-     * This method sets the isEdit field to true in order to display the Edit Details Section
+     * Method to get the class list.
      */ 
-    public void editClassDetails()
+    Public list<Class__c> getClasses() 
     {
-        isEdit = true;  
+        List<Class__c> classes = [SELECT Name, Currency__c, MaxSize__c, MyCount__c FROM Class__c];
+        return classes;
     }
     
     /**
-     * This method saves new data of the class and redirects to the same page.
+     * Method to select the class for editing.
      */ 
-    public PageReference SaveDetails()
+    public void editClass() 
     {
-        Class__c currentClass = [SELECT Name, DetailedDescription__c , Currency__c, MaxSize__c FROM Class__c WHERE Id =: classId];
-        currentClass.Name = className;
-        currentClass.DetailedDescription__c = classDescription;
-        currentClass.Currency__c = !String.isBlank(classFee) ? Decimal.valueOf(classFee) : 0;
-        currentClass.MaxSize__c = !String.isBlank(classMaxSize) ? Decimal.valueOf(classMaxSize) : 0;
-        update currentClass;
-        PageReference pageRef = new PageReference('/apex/manageClass');
-        pageRef.setRedirect(false);
-        isEdit = false;
-        classes = [SELECT Name FROM Class__c];
-        return pageRef;
+        SelectedClass = [SELECT Name, Currency__c, MaxSize__c, MyCount__c FROM Class__c WHERE Id = :ClassId];
+        Render = true;
     }
     
     /**
-     * This method deletes the class and redirects to the same page.
-     */ 
-    public PageReference deleteClass()
+     * Method to update the edited class details.
+     */
+    public void updateClass() 
     {
-        Class__c currentClass = [SELECT Id FROM Class__c WHERE Id =: classId];
-        delete currentClass;
-        PageReference pageRef = new PageReference('/apex/manageClass');
-        pageRef.setRedirect(false);
-        isEdit = false;
-        return pageRef;
+        update SelectedClass;
+        Render = false;
+    }
+    
+    /**
+     * Method to delete the class.
+     */
+    public void deleteClass() 
+    {
+        SelectedClass = [SELECT Name, Currency__c, MaxSize__c, MyCount__c FROM Class__c WHERE Id = :ClassId];
+        Render = false;
+        delete SelectedClass;
     }
 }

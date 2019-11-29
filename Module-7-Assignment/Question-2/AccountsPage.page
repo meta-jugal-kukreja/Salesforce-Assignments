@@ -1,4 +1,13 @@
 <apex:page Controller="ControllerForAccount">
+    <head>
+        <style>
+            .outputTextLink
+            {
+            	color: #ccc;
+            	text-decoration: underline;
+            }
+        </style>
+    </head>
     <apex:form >
         <apex:pageBlock title="Accounts Search">
             <apex:pageBlockButtons >
@@ -29,9 +38,9 @@
                 <apex:panelGrid columns="4">
                     <apex:commandLink action="{!first}" value="First" />
                     <apex:commandLink action="{!previous}" value="Previous" rendered="{!setCon.HasPrevious}" />
-                    <apex:outputText style="color: #ccc;" value="Previous" rendered="{!NOT(setCon.HasPrevious)}"/>
+                    <apex:outputText styleClass="outputTextLink" value="Previous" rendered="{!NOT(setCon.HasPrevious)}"/>
                     <apex:commandLink action="{!next}" value="Next" rendered="{!setCon.HasNext}" />
-                    <apex:outputText style="color: #ccc;" value="Next" rendered="{!NOT(setCon.HasNext)}"/>
+                    <apex:outputText styleClass="outputTextLink" value="Next" rendered="{!NOT(setCon.HasNext)}"/>
                     <apex:commandLink action="{!last}" value="Last" />
                 </apex:panelGrid>
             </apex:pageBlock>

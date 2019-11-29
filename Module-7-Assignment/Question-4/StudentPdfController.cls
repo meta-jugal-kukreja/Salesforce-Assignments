@@ -18,25 +18,33 @@ public class StudentPdfController
      */ 
     public PageReference savePdf() 
     {
-        PageReference pdfPage = Page.StudentPdfPageCopy;
+        System.debug('hello');
+        PageReference pdfPage = Page.StudentPdfPage;
         // add parent id to the parameters for standardcontroller
-        pdfPage.getParameters().put('id', currentStudentId);
-        // create the new attachment
-        Attachment attach = new Attachment();        
-        attach.Body = pdfPage.getContentAsPdf();
-        attach.Name = 'StudentDetails.pdf';
-        // attach the pdf to the account
-        attach.ParentId = currentStudentId;
+        pdfPage.getParameters().put('Id', currentStudentId);
         //delete previous attachments
         List<Attachment> attachmentList = [SELECT Id, ParentId FROM Attachment WHERE ParentId = :currentStudentId];
         if(attachmentList.size() > 0) 
         {
-            delete attachmentList[0];
+            delete attachmentList;
         }
+        // create the new attachment
+        Attachment attach = new Attachment(); 
+        blob pdfBody;
+        if(Test.isRunningTest()) 
+        { 
+            pdfBody = blob.valueOf('Unit.Test');
+        } else 
+        {
+            pdfBody = pdfPage.getContentAsPDF();
+        }
+        attach.Body = pdfBody;
+        attach.Name = 'StudentDetails.pdf';
+        // attach the pdf to the account
+        attach.ParentId = currentStudentId;
         insert attach;
         //redirect the user to the same page
-        PageReference renderOnPage = new PageReference('/'+ currentStudentID);
-        return renderOnPage;
+        return new PageReference('/' + currentStudentID);
     }
     
     /**
@@ -44,7 +52,7 @@ public class StudentPdfController
      */ 
     public Student__c getStudent()
     {
-        Student__C student = [Select FirstName__c, Name, Class__r.Name, Age__c, DOB__c from Student__c Where id = :currentStudentID];
+        Student__C student = [SELECT FirstName__c, Name, Class__r.Name, Age__c, DOB__c FROM Student__c WHERE id = :currentStudentID];
         return student;
     }
 }
