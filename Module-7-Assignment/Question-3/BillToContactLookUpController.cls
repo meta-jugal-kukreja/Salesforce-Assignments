@@ -4,7 +4,7 @@
 public class BillToContactLookUpController 
 {
     public Id lookUpBillToContact {get;set;}
-    Opportunity currentOpportunity;
+    public Opportunity currentOpportunity;
     //Getting the Id of the current User.
     public Id currentOpportunityId 
     {
@@ -15,22 +15,23 @@ public class BillToContactLookUpController
         set;
     }
     
+    /**
+     * Constructor to initialize the current opoortunity list.
+     */ 
     public BillToContactLookUpController()
     {
-        currentOpportunity = [SELECT Manager__c, BillToContact__c FROM Opportunity WHERE Id =: currentOpportunityId];
+        currentOpportunity = [SELECT Manager__c, BillToContact__c, BillToContact__r.Name
+                              FROM Opportunity 
+                              WHERE Id =: currentOpportunityId];
     }
+    
     /**
-     * This method generates the list of contacts associated with the Opportunity's Manager and makes options for selection.
+     * Method to return the list of Contacts related to current Opportunity's manager.
      */ 
-    public List<SelectOption> getContactOptions()
+    public List<Contact> getContactList()
     {
-        List<SelectOption> contactOptions = new List<SelectOption>();
-        List<Contact> contactList = [SELECT Id, Name FROM Contact WHERE AccountId =: currentOpportunity.Manager__c];
-        for(Contact oneContact : contactList)
-        {
-            contactOptions.add(new SelectOption(oneContact.Id, oneContact.Name));
-        }
-        return contactOptions;
+        List<Contact> contactList = [SELECT Id, Name, Experience__c, Birthdate, Email FROM Contact WHERE AccountId =: currentOpportunity.Manager__c];
+        return contactList;
     }
     
     /**

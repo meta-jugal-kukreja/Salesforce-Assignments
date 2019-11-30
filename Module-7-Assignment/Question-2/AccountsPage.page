@@ -21,7 +21,7 @@
         </apex:pageBlock>
         <apex:outputLabel rendered="{! NOT(showAccountsList)}">
             <p>
-                Not accounts to Display.
+                No accounts to Display.
             </p>
         </apex:outputLabel>
         <apex:outputPanel rendered="{! showAccountsList}">
