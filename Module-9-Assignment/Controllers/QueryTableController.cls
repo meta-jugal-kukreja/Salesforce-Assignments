@@ -8,6 +8,7 @@ public class QueryTableController
     public String sortBy = '';
     public Integer DesiredPage{get;set;}
     public Boolean isSortingLinkClicked = false;
+    public boolean sortAscending = true;
     
     //Initializing StandardSetController
     public ApexPages.StandardSetController setCon
@@ -16,11 +17,11 @@ public class QueryTableController
         {
             if(setCon == null)
             {
-                List<sObject> displayFields = new List<sObject>();
-                displayFields = getDisplayFields(queryToBeExecuted);
-                if(displayFields != null)
+                List<sObject> listOfDisplayingObjects = new List<sObject>();
+                listOfDisplayingObjects = getDisplayFields(queryToBeExecuted);
+                if(listOfDisplayingObjects != null)
                 {
-                    setCon = new ApexPages.StandardSetController(displayFields);
+                    setCon = new ApexPages.StandardSetController(listOfDisplayingObjects);
                     setCon.setPageSize(10);
                 }
             }
@@ -36,7 +37,6 @@ public class QueryTableController
     {
         this.queryToBeExecuted = '';
         this.sortBy = '';
-        System.debug(this.DesiredPage);
     }
     
     /**
@@ -66,6 +66,7 @@ public class QueryTableController
     {
         this.setCon = null;
         this.isSortingLinkClicked = true;
+        this.sortAscending = !this.sortAscending;
     }
     
     /**
@@ -108,11 +109,22 @@ public class QueryTableController
         String orderedQuery = query;        
         if(isSortingLinkClicked && String.isNotBlank(this.getSortBy()))
         {
-            if(query.containsIgnoreCase('order by'))
+            if(sortAscending)
             {
-                orderedQuery = orderedQuery.substring(0, query.indexOfIgnoreCase('order by') - 1);
+                if(query.containsIgnoreCase('order by'))
+                {
+                    orderedQuery = orderedQuery.substring(0, query.indexOfIgnoreCase('order by') - 1);
+                }
+                orderedQuery = orderedQuery + ' ORDER BY ' + this.getSortBy();                
             }
-            orderedQuery = orderedQuery + ' ORDER BY ' + this.getSortBy();
+            else
+            {
+                if(query.containsIgnoreCase('order by'))
+                {
+                    orderedQuery = orderedQuery.substring(0, query.indexOfIgnoreCase('order by') - 1);
+                }
+                orderedQuery = orderedQuery + ' ORDER BY ' + this.getSortBy() + ' DESC';
+            }
         }
         return orderedQuery;
     }
