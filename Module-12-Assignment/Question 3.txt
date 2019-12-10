@@ -16,7 +16,7 @@ trigger accountLimitExample on Account (after delete, after insert, after update
     
     //Proactively determine if there are too many Opportunities to update and avoid governor limits
     
-    if(Limits.getQueryRows() > Limits.getDmlRows()) 
+    if(opptys.size() > Limits.getLimitDmlRows()) 
     {
         throw new System.LimitException('Too Many Rows');
     }
