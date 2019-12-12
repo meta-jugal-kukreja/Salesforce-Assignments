@@ -22,12 +22,20 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
             }
             if(String.isNotBlank(contactsXmlFileContent))
             {
-                parseAndCreateContacts(contactsXmlFileContent);
+                try
+                {
+                    parseAndCreateContacts(contactsXmlFileContent);
+                }
+                catch(Exception ex)
+                {
+                    result.success = false;
+                    result.message = ex.getMessage();
+                }
             }
             else
             {
                 result.success = false;
-                result.message = 'No data was inserted';
+                result.message = 'Empty XML File was provided, So no data was inserted';
             }
         }
         return result;
@@ -38,7 +46,6 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
      */ 
     public void parseAndCreateContacts(String xmlContentOfFile)
     {
-        System.debug(xmlContentOfFile);
         XmlStreamReader xmlReader = new XmlStreamReader(xmlContentOfFile);
         List<Contact> contactList = new List<Contact>();
         while(xmlReader.hasNext())
