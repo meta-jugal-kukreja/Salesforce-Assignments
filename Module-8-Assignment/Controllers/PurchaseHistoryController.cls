@@ -4,7 +4,9 @@
 public class PurchaseHistoryController 
 {
 	public String sortBy = 'Order_Status';
-	
+    public Boolean sortAscending = false;
+	List<Purchase_Order__c> ordersPurchased = new List<Purchase_Order__c>();
+    
 	//Initializing StandardSetController
     public ApexPages.StandardSetController setCon 
     {
@@ -12,16 +14,31 @@ public class PurchaseHistoryController
         {
             if(setcon == null)
             {
-                List<Purchase_Order__c> ordersPurchased = new List<Purchase_Order__c>();
-                if('Order_Status'.equals(sortBy))
+                if(sortAscending)
                 {
-                    ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
-                                       ORDER BY Order_Status__c ASC];
+                    if('Order_Status'.equals(sortBy))
+                    {
+                        ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
+                                           ORDER BY Order_Status__c ASC];
+                    }
+                    else if('Order_Price'.equals(sortBy))
+                    {
+                        ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
+                                           ORDER BY Order_Price__c ASC];
+                    }
                 }
-                else if('Order_Price'.equals(sortBy))
+                else
                 {
-                    ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
-                                       ORDER BY Order_Price__c ASC];
+                    if('Order_Status'.equals(sortBy))
+                    {
+                        ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
+                                           ORDER BY Order_Status__c DESC];
+                    }
+                    else if('Order_Price'.equals(sortBy))
+                    {
+                        ordersPurchased = [SELECT Name, Order_Price__c, Order_Status__c FROM Purchase_Order__c 
+                                           ORDER BY Order_Price__c DESC];
+                    }
                 }
                 setCon = new ApexPages.StandardSetController(ordersPurchased);   
                 setCon.setPageSize(10);
@@ -36,6 +53,7 @@ public class PurchaseHistoryController
      */ 
     public void sortByOrderPrice()
     {
+        this.sortAscending = !this.sortAscending;
         this.sortBy = 'Order_Price';
     }
     
@@ -44,6 +62,7 @@ public class PurchaseHistoryController
      */
     public void sortByOrderStatus()
     {
+        this.sortAscending = !this.sortAscending;
         this.sortBy = 'Order_Status';
     }
     
@@ -54,6 +73,11 @@ public class PurchaseHistoryController
     {
         setCon = null;
         return (List<Purchase_Order__c>)setCon.getRecords();
+    }
+    
+    public void save()
+    {
+        update ordersPurchased;
     }
     
     //Pagination Methods.

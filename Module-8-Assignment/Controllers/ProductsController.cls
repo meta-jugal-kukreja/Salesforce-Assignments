@@ -6,6 +6,7 @@ public class ProductsController
     public String productToBeSearched;
     List<ProductWrapper> productWrapperList;
     Map<Id, ProductWrapper> selectedProductMap = new Map<Id, ProductWrapper>();
+    public ShoppingCartService shoppingCartServiceobj = new ShoppingCartService();
     
     //Initializing StandartSetController
     public ApexPages.StandardSetController setCon 
@@ -19,12 +20,12 @@ public class ProductsController
                 {
                     productList = [SELECT Name, ProductCode, Description, Price__c, Quantity__c
                                    FROM Product2 
-                                   WHERE Name LIKE: this.productTobeSearched+'%' AND Quantity__c != NULL ORDER BY Name DESC];
+                                   WHERE Name LIKE: this.productTobeSearched+'%' AND Quantity__c != NULL];
                 }
                 else 
                 {
                     productList = [SELECT Name, ProductCode, Description, Price__c, Quantity__c
-                                   FROM Product2 WHERE Quantity__c != NULL ORDER BY Name DESC];
+                                   FROM Product2 WHERE Quantity__c != NULL];
                 }
                 setCon = new ApexPages.StandardSetController(productList);
                 setCon.setPageSize(10);
@@ -39,7 +40,7 @@ public class ProductsController
      */ 
     public List<Product2> getProducts()
     {
-        return (List<Product2>)setCon.getRecords();
+        return (List<Product2>)this.shoppingCartServiceobj.getRecords(setCon);
     }
     
     /**
@@ -55,7 +56,7 @@ public class ProductsController
      */
     public void updateProductWrapperMap() 
     {
-        for(ProductWrapper prod : getProductWrapperList()) 
+        for(ProductWrapper prod : productWrapperList) 
         {
             if(!selectedProductMap.containsKey(prod.product.Id)) 
             {

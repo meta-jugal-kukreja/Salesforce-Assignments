@@ -1,12 +1,12 @@
 <apex:page controller="ShoppingCartController" id="Main_Page">
     <apex:stylesheet value="{!URLFOR($Resource.FontAwesome,'/fontawesome-free-5.11.2-web/css/all.css')}"/>
-    <h1>
-        Online Shopping Cart Application
-    </h1>
+    <div style="text-align:center;width:100%;padding:10px 0" >
+        <apex:sectionHeader title="Online Shopping Cart Application"/>
+    </div>
     <apex:form >
         <!-- Section for Purchase History -->
         <apex:outputPanel id="Purchase_History">
-            <apex:pageBlock title="Purchase order History" rendered="{! showPurchasedHistoryArea}">
+            <apex:pageBlock title="Purchase order History" rendered="{! showPurchasedHistoryArea}" mode="inlineEdit">
                 <apex:pageBlockTable value="{! PurchasedOrders}" var="order">
                     <apex:column headerValue="Order ID" value="{! order.Name}"/>
                     <apex:column value="{! order.Order_Price__c}">
@@ -16,7 +16,10 @@
                             </apex:commandLink>
                         </apex:facet>
                     </apex:column>
-                    <apex:column value="{! order.Order_Status__c}">
+                    <apex:column >
+                        <apex:outputField value="{! order.Order_Status__c}">
+                            <apex:inlineEditSupport disabled="false"  event="ondblClick" showOnEdit="saveButton,cancelButton" />
+                        </apex:outputField>
                         <apex:facet name="header">
                             <apex:commandLink action="{! sortByOrderStatus}" reRender="Purchase_History">
                                 <apex:outputText value="{! $ObjectType.Purchase_Order__c.Fields.Order_Status__c.Label }"/>
@@ -30,10 +33,15 @@
                 <apex:commandButton value="Next" action="{! next}" reRender="Purchase_History" rendered="{! hasNext}"/>
                 <apex:commandButton value="Last" action="{! last}" reRender="Purchase_History"/>
                 Page: <apex:outputText value=" {!PageNumber} of {! CEILING(ResultSize / PageSize) }"/>
+                <div style="text-align:center">
+                    <apex:commandButton value="Save" action="{!save}" id="saveButton" />
+                    
+                </div>
             </apex:pageBlock>
             <div style="text-align:center;width:100%;padding:10px 0" >
-                <apex:commandButton value="Add New Purchase" action="{! NewPurchase}" reRender="Product_Area"/>
+                <input type="button" value="Add New Purchase" onclick="displayProductsArea()"/>
             </div>
+            <apex:actionFunction name="displayProductsArea" action="{! NewPurchase}" reRender="Product_Area"/>
         </apex:outputPanel>
         
         <!-- Products Area -->
@@ -74,7 +82,7 @@
         
         <!-- Cart Area -->
         <apex:outputPanel id="Cart_Area">
-            <apex:pageBlock rendered="{! showCart}" title="Cart Items">
+            <apex:pageBlock rendered="{! showCart}" title="Cart Items" mode="inlineEdit">
                 <apex:pageBlockButtons location="bottom">
                     <div align="center">
                         <apex:commandButton value="Checkout" action="{! checkout}" reRender="Checkout_Area,Product_Area,Cart_Area,Purchase_History,New_Order_Button"/>
@@ -86,14 +94,12 @@
                     <apex:column value="{! product.product.Price__c}" headerValue="Price Per Unit"/>
                     <apex:column headerValue="Quantity">
                         <apex:actionRegion >
-                            <apex:inputText value="{! product.quantity}">
-                                
-                                <apex:actionSupport action="{! updateCart}" reRender="Product_Area,Cart_Area" event="onkeyup">
+                            <apex:inputText value="{! product.quantity}">  
+                                <apex:actionSupport action="{! updateCart}" reRender="Product_Area,Cart_Area" event="onchange">
                                     <apex:param assignTo="{! selectedProduct}" value="{! product.product.id}" name="selectedProduct"/>
                                 </apex:actionSupport>
                             </apex:inputText>
                         </apex:actionRegion>
-                        
                     </apex:column>
                     <apex:column headerValue="Delete">
                         <apex:commandLink action="{! removeProductFromCart}" reRender="Cart_Area,Product_Area">
@@ -111,14 +117,12 @@
                 <apex:pageBlockButtons location="bottom">
                     <apex:commandButton value="Place Order" action="{! placeOrder}"/>
                     <apex:commandButton value="Cancel" action="{! cancelOrder}"  reRender="Checkout_Area,Product_Area,Cart_Area,Purchase_History,New_Order_Button"/>
-                    
                 </apex:pageBlockButtons>
                 <table style="width:100%">
                     <tr>
                         <td>
                             Invoice No:#
                         </td>
-                        
                         <td style="text-align:right"> 
                             Order Date: 
                             <apex:outputtext value="{0, date, medium}">
@@ -126,9 +130,7 @@
                             </apex:outputtext>
                         </td>
                     </tr>
-                    
                 </table>
-                
                 <apex:pageBlockTable value="{! ProductsInCart}" var="product">
                     <apex:column value="{! product.product.Name}"/>
                     <apex:column value="{! product.product.ProductCode}"/>
@@ -141,7 +143,6 @@
                             
                         </apex:outputtext>
                     </apex:column>
-                    
                 </apex:pageBlockTable>
                 <table style="width:100%">
                     <tr>
@@ -151,8 +152,7 @@
                                 <apex:param value="{!totalAmount}"></apex:param>
                             </apex:outputtext>
                         </td>
-                    </tr>
-                    
+                    </tr> 
                 </table>
             </apex:pageBlock>
         </apex:outputPanel>

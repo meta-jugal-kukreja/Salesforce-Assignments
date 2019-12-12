@@ -1,7 +1,7 @@
 /**
 * Controller Class for ShoppingCart Page.
 */ 
-public class ShoppingCartController 
+public class ShoppingCartController
 {
     public Boolean showNewOrderButton {get;set;}
     public Boolean selectedAllProperties {get; set;}
@@ -12,10 +12,11 @@ public class ShoppingCartController
     public Boolean showCart {get; set;}
     public Boolean showCheckout {get; set;}
     
-    private PurchaseHistoryController purchaseHistoryObj;
-    private ProductsController productsObj;
-    private CartController cartObj;
-    private CheckoutController checkoutObj;
+    public PurchaseHistoryController purchaseHistoryObj;
+    public ProductsController productsObj;
+    public CartController cartObj;
+    public CheckoutController checkoutObj;
+    public ShoppingCartService shoppingCartServiceobj;
     
     /**
      * Constructor to initialize the data members.
@@ -26,6 +27,7 @@ public class ShoppingCartController
         this.productsObj = new ProductsController();
         this.cartObj = new CartController();
         this.checkoutObj = new CheckoutController();
+        this.shoppingCartServiceobj = new ShoppingCartService();
         this.showPurchaseHistoryArea = false;
         this.showProducts = false;
         this.showCart = false;
@@ -38,7 +40,8 @@ public class ShoppingCartController
     //Method to get purchased orders
     public List<Purchase_Order__c> getPurchasedOrders()
     {
-        return this.purchaseHistoryObj.getPurchasedOrders();
+        return (List<Purchase_Order__c>)this.purchaseHistoryObj.getPurchasedOrders();
+        //return (List<Purchase_Order__c>)this.shoppingCartServiceobj.getItems(this.purchaseHistoryObj.setCon);
     }
     
     //Method To show purchased area on the page
@@ -67,6 +70,10 @@ public class ShoppingCartController
         this.purchaseHistoryObj.sortByOrderStatus();
     }
     
+    public void save()
+    {
+        this.purchaseHistoryObj.save();
+    }
     //Methods for pagination
     public Integer getPageSize() {return this.purchaseHistoryObj.getPageSize();}
     public Integer getPageNumber() {return this.purchaseHistoryObj.getPageNumber();}
@@ -102,12 +109,6 @@ public class ShoppingCartController
     public void searchProduct()
     {
         this.productsObj.search();
-    }
-    
-    //Method to show the products
-    public Boolean getShowProducts() 
-    {
-        return this.ShowProducts;
     }
     
     //Method to show the ProductWrapperList
@@ -179,12 +180,6 @@ public class ShoppingCartController
     }
     
     /*** Checkout Area ***/
-    
-    //Method to show the checkout screen.
-    public Boolean getShowCheckout() 
-    {
-        return this.showCheckout;
-    }
     
     //Method to show the total amount or bill of products in the cart
     public Decimal getTotalAmount() 
