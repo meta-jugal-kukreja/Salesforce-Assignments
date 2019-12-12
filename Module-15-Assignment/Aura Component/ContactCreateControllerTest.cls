@@ -1,6 +1,12 @@
+/**
+ * Test class for ContactCreateController.
+ */ 
 @isTest
 public class ContactCreateControllerTest 
 {
+    /**
+     * Test method to test the creation of contact is not present before.
+     */ 
 	@isTest
     private static void testSaveContactWhenContactIsNotPresent()
     {
@@ -9,6 +15,9 @@ public class ContactCreateControllerTest
         System.assertEquals('Test LastName', newContact.LastName, 'Contact created was not as expected');
     }
     
+    /**
+     * Test method to test the updation of contact is present before.
+     */ 
     @isTest
     private static void testSaveContactWhenContactIsPresent()
     {
