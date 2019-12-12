@@ -1,0 +1,30 @@
+Question : Optimize the following code and quote the problems associated with the current code snippet.
+trigger accountTestTrigger on Account (before insert, before update) {
+    for(Account a: Trigger.new) {
+        List<Contact> contacts = [select id, salutation, firstname, lastname, email
+                                  from Contact where accountId = :a.Id];
+        for(Contact c: contacts) {
+            System.debug('Contact Id[' + c.Id + '], FirstName[' + c.firstname + '],
+                          LastName[' + c.lastname +']');
+            c.Description=c.salutation + ' ' + c.firstName + ' ' + c.lastname;
+            update c;
+        }
+    }
+}
+
+Answer:
+trigger accountTestTrigger on Account (before insert, before update) {
+    List<Contact> contactList = [SELECT Salutation, firstName, lastName 
+                                 FROM Contact 
+                                 WHERE AccountId IN :Trigger.new];
+    for(Contact con :contactList) {
+        System.debug('Contact Id[' + con.Id + '], FirstName[' + con.firstName + '], LastName[' + con.lastName + ']');
+        con.Description = con.salutation + ' ' + con.firstName + ' ' + con.lastname;
+    }
+    update contactList;
+}
+
+Problems:
+1. Query was executing in the loop. This would cause governor limit ot reach. Solved it by bringing the contact List query out of for loop and use 'IN' and get the required accoint ids.
+2. Email field is not used in the logic. So, removed it.
+3. Each contact was being updated in the loop. Rather, updated the whole contactList outside the loop.
