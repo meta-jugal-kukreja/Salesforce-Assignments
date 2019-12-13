@@ -24,7 +24,9 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
             {
                 try
                 {
-                    parseAndCreateContacts(contactsXmlFileContent);
+                    Integer numberOfContactsInserted = parseAndCreateContacts(contactsXmlFileContent);
+                    result.success = true;
+                    result.message = numberOfContactsInserted + ' Contacts were Inserted';
                 }
                 catch(Exception ex)
                 {
@@ -35,7 +37,7 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
             else
             {
                 result.success = false;
-                result.message = 'Empty XML File was provided, So no data was inserted';
+                result.message = 'Empty XML File was provided, So no data was Inserted';
             }
         }
         return result;
@@ -44,7 +46,7 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
     /**
      * This method parses the whole XML File content, extracts each contact and insert all contacts in bulk.
      */ 
-    public void parseAndCreateContacts(String xmlContentOfFile)
+    public Integer parseAndCreateContacts(String xmlContentOfFile)
     {
         XmlStreamReader xmlReader = new XmlStreamReader(xmlContentOfFile);
         List<Contact> contactList = new List<Contact>();
@@ -64,6 +66,7 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
         {
             insert contactList;
         }
+        return contactList.size();
     }
     
     /**
@@ -89,7 +92,7 @@ public class EmailServiceForCreatingContacts implements Messaging.InboundEmailHa
                 xmlReader.next();
                 newContact.Email = xmlReader.getText();
             }
-            else if(xmlReader.getEventType() == XmlTag.START_ELEMENT && xmlReader.getLocalName() == 'deptartment')
+            else if(xmlReader.getEventType() == XmlTag.START_ELEMENT && xmlReader.getLocalName() == 'department')
             {
                 xmlReader.next();
                 newContact.Department = xmlReader.getText();

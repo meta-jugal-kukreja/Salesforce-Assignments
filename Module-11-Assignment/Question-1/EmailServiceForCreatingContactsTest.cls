@@ -20,35 +20,35 @@ public class EmailServiceForCreatingContactsTest
             '<fname>fname1</fname>' +
             '<lname>lname1</lname>' +
             '<email>test.email@testdomain.com</email>' +
-            '<deptartment>department1</deptartment>' +
+            '<department>department1</department>' +
             '<experience>1</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname2</fname>' +
             '<lname>lname2</lname>' +
             '<email>test.email2@testdomain.com</email>' +
-            '<deptartment>department2</deptartment>' +
+            '<department>department2</department>' +
             '<experience>2</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname3</fname>' +
             '<lname>lname3</lname>' +
             '<email>test.email@testdomain.com</email>' +
-            '<deptartment>department3</deptartment>' +
+            '<department>department3</department>' +
             '<experience>3</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname4</fname>' +
             '<lname>lname4</lname>' +
             '<email>test.email4@testdomain.com</email>' +
-            '<deptartment>department4</deptartment>' +
+            '<department>department4</department>' +
             '<experience>4</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname5</fname>' +
             '<lname>lname5</lname>' +
             '<email>test.email5@testdomain.com</email>' +
-            '<deptartment>department5</deptartment>' +
+            '<department>department5</department>' +
             '<experience>5</experience>' +
             '</contact>' +
             '</contacts>';
@@ -57,8 +57,9 @@ public class EmailServiceForCreatingContactsTest
         EmailServiceForCreatingContacts testMail = new EmailServiceForCreatingContacts();
         Messaging.InboundEmailResult result = testMail.handleInboundEmail(inboundEmail, envelop);
         List<Contact> contactList = [SELECT FirstName, LastName, Email, Department, experience__c FROM Contact];
-        System.assertEquals(5, contactList.size(), 'Contacts were not inserted as expected.');
-        System.assertEquals('fname1', contactList.get(0).FirstName, 'Contacts were not inserted as expected.');
+        System.assertEquals('5 Contacts were Inserted', result.message, 'Result was not as expected.');
+        System.assertEquals(5, contactList.size(), 'Contacts were not Inserted as expected.');
+        System.assertEquals('fname1', contactList.get(0).FirstName, 'Contacts were not Inserted as expected.');
     }
     
     /**
@@ -77,35 +78,35 @@ public class EmailServiceForCreatingContactsTest
             '<fname>fname1</fname>' +
             '<lname> </lname>' +
             '<email>test.email@testdomain.com</email>' +
-            '<deptartment>department1</deptartment>' +
+            '<department>department1</department>' +
             '<experience>1</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname2</fname>' +
             '<lname>lname2</lname>' +
             '<email>test.email2@testdomain.com</email>' +
-            '<deptartment>department2</deptartment>' +
+            '<department>department2</department>' +
             '<experience>2</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname3</fname>' +
             '<lname>lname3</lname>' +
             '<email>test.email@testdomain.com</email>' +
-            '<deptartment>department3</deptartment>' +
+            '<department>department3</department>' +
             '<experience>3</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname4</fname>' +
             '<lname>lname4</lname>' +
             '<email>test.email4@testdomain.com</email>' +
-            '<deptartment>department4</deptartment>' +
+            '<department>department4</department>' +
             '<experience>4</experience>' +
             '</contact>' +
             '<contact>' +
             '<fname>fname5</fname>' +
             '<lname>lname5</lname>' +
             '<email>test.email5@testdomain.com</email>' +
-            '<deptartment>department5</deptartment>' +
+            '<department>department5</department>' +
             '<experience>5</experience>' +
             '</contact>' +
             '</contacts>';
@@ -133,6 +134,6 @@ public class EmailServiceForCreatingContactsTest
         inboundEmail.textAttachments =   new Messaging.inboundEmail.TextAttachment[] { textAttachment };
         EmailServiceForCreatingContacts testMail = new EmailServiceForCreatingContacts();
         Messaging.InboundEmailResult result = testMail.handleInboundEmail(inboundEmail, envelop);
-        System.assertEquals('Empty XML File was provided, So no data was inserted', result.message, 'Result was not as expected');
+        System.assertEquals('Empty XML File was provided, So no data was Inserted', result.message, 'Result was not as expected');
     }
 }
