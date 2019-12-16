@@ -1,30 +1,35 @@
-import { LightningElement, api, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { LightningElement } from "lwc";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { NavigationMixin } from "lightning/navigation";
 
-export default class CreateContact extends LightningElement {
+export default class CreateContact extends NavigationMixin(LightningElement) {
+  handleSuccess(event) {
+    this.recordId = event.detail.id;
+    const toastEvent = new ShowToastEvent({
+      title: "Success Message",
+      message: "Contact saved successfully!!",
+      variant: "successs",
+      mode: "dismissable"
+    });
+    this.accountHomePageRef = {
+        type: "standard__objectPage",
+        attributes: {
+          recordId: this.recordId,
+          objectApiName: "Contact",
+          actionName: "view"
+        }
+      };
+    this[NavigationMixin.GenerateUrl](this.accountHomePageRef);
+    this.dispatchEvent(toastEvent);
+  }
 
-    @api recordId;
-    @track contactId;
-    handleSuccess(event) {
-        this.contactId = event.detail.id;
-        this.recordId = this.contactId;
-        const toastEvent = new ShowToastEvent({
-            title : 'Success Message',
-            message : 'Contact saved successfully!!',
-            variant : 'successs',
-            mode : 'dismissable'
-        });
-        this.dispatchEvent(toastEvent);
-    }
-
-
-    handleError() {
-        const toastEvent = new ShowToastEvent({
-            title : 'Error Message',
-            message : 'Some error occurred!!',
-            variant : 'error',
-            mode : 'dismissable'
-        });
-        this.dispatchEvent(toastEvent);
-    }
+  handleError(event) {
+    const toastEvent = new ShowToastEvent({
+      title: "Error Message",
+      message: event.detail.message,
+      variant: "error",
+      mode: "dismissable"
+    });
+    this.dispatchEvent(toastEvent);
+  }
 }
