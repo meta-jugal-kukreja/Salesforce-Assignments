@@ -11,15 +11,15 @@ export default class CreateContact extends NavigationMixin(LightningElement) {
       variant: "successs",
       mode: "dismissable"
     });
-    this.accountHomePageRef = {
-        type: "standard__objectPage",
+    this.contactHomePageRef = {
+        type: "standard__recordPage",
         attributes: {
           recordId: this.recordId,
           objectApiName: "Contact",
           actionName: "view"
         }
       };
-    this[NavigationMixin.GenerateUrl](this.accountHomePageRef);
+    this[NavigationMixin.Navigate](this.contactHomePageRef);
     this.dispatchEvent(toastEvent);
   }
 
