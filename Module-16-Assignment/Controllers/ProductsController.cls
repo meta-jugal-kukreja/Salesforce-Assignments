@@ -94,6 +94,14 @@ public class ProductsController
 		this.productTobeSearched = productName;
     }
     
+    /**
+     * Method to get the selectedProductWrapperMapbyProductId.
+     */ 
+    public Map<Id, ProductWrapper> getSelectedProductMap()
+    {
+        return selectedProductWrapperMapbyProductId;
+    }
+    
     //Pagination Methods.
     public Integer getPageSize() {return setCon.getPageSize();}
     public Integer getPageNumber() {return setCon.getPageNumber();}
