@@ -1,0 +1,17 @@
+<apex:page standardController="Contact">
+   <head>
+       <style>
+           #header {
+            text-align : center;
+            width : 100%;
+            background-color : blue;
+           }
+           .pageDescription, .pageType {
+            color : White !important;
+           }
+       </style>
+   </head>
+   <div id = "header">
+       <apex:sectionHeader title="{!Contact.RecordType.Name}" rendered="{!NOT(ISBLANK(Contact.RecordTypeId))}" />
+   </div>
+</apex:page>

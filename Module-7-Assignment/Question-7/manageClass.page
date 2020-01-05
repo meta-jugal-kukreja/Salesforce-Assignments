@@ -1,0 +1,33 @@
+<apex:page Controller="ManageClassController">
+    <apex:form >
+        <apex:pageBlock id="ClassesList" title="Classes">
+                <apex:pageBlockTable value="{!Classes}" var="cls">
+                    <apex:column headerValue="Edit">
+                        <apex:commandLink action="{!editClass}" value="Edit" reRender="ClassForm">
+                            <apex:param name="ClassId" assignTo="{!ClassId}" value="{!cls.Id}" />
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Delete">
+                        <apex:commandLink action="{!deleteClass}" value="Delete" reRender="ClassesList ,ClassForm ">
+                            <apex:param name="ClassId" assignTo="{!ClassId}" value="{!cls.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column value="{!cls.Name}" headerValue="Class Name"/>
+                    <apex:column value="{!cls.Currency__c}" />
+                    <apex:column value="{!cls.MaxSize__c}" />
+                    <apex:column value="{!cls.MyCount__c}" />
+                </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:pageBlock id="ClassForm" title="Edit Class Details">
+            <apex:pageBlockSection rendered="{!Render}" columns="1">
+                <apex:inputField value="{!SelectedClass.Name}"/>
+                <apex:inputField value="{!SelectedClass.Currency__c}"/>
+                <apex:inputField value="{!SelectedClass.MaxSize__c}"/>
+                <apex:inputField value="{!SelectedClass.MyCount__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons rendered="{!Render}">
+                <apex:commandButton value="Save" action="{!updateClass}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

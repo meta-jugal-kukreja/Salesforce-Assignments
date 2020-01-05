@@ -1,0 +1,29 @@
+<apex:page Controller="BillToContactLookUpController">
+    <apex:form >
+        <apex:pageBlock >
+            <!-- Table to display Current Opportunity's Manager's Related contacts with some information -->
+            <apex:pageBlockTable value="{! ContactList}" var="con">
+                <apex:column >
+                    <input type="radio" name="radioButton" value="{! con.Id}" 
+                           onclick="assignValue(this,'{!$component.hidValId}')"/>
+                </apex:column>
+                <apex:column value="{! con.Name}"/>
+                <apex:column value="{! con.Experience__c}"/>
+                <apex:column value="{! con.Birthdate}"/>
+                <apex:column value="{! con.Email}"/>
+            </apex:pageBlockTable>
+            <apex:inputHidden value="{! lookUpBillToContact}" id="hidValId" />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{! save}"/>
+                <apex:commandButton value="Clear" action="{! clear}"/>
+                <apex:commandButton value="Cancel" action="{! cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+    function assignValue(input, parameter)
+    {
+        document.getElementById(parameter).value = input.value;
+    }
+    </script>
+</apex:page>
