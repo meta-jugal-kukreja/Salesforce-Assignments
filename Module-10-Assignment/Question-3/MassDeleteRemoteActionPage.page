@@ -1,0 +1,41 @@
+<apex:page Controller="MassDeleteRemoteActionController">
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock title="Delete Students">
+            <apex:pageBlockTable value="{! students}" var="student">
+                <apex:column value="{! student.Name}"/>
+                <apex:column value="{! student.Id}"/>
+            </apex:pageBlockTable>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Continue" onclick="deleteStudents()" action="{! redirect}"/>
+                <apex:commandButton value="Cancel" action="{! redirect}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script src="/soap/ajax/45.0/connection.js" type="text/javascript"></script>
+    <script>
+        sforce.connection.sessionId = '{! $Api.Session_ID }';
+    	var studentIdList = new Array();
+    	<apex:repeat value="{! students}" var="student">
+        	studentIdList.push('{!student.Id}');    
+   		</apex:repeat>
+    	Visualforce.remoting.timeout = 120000;
+    	
+    	function deleteStudents()
+    	{
+        	Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.MassDeleteRemoteActionController.deleteStudents}',
+            studentIdList,
+            handleResult);
+        }
+    
+    	function handleResult()
+        {
+            if(event.statusCode != 200)
+            {
+               alert('An error occured ' + error); 
+            }
+        }
+    </script>
+</apex:page>
